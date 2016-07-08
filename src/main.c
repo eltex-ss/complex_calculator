@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "complex.h"
+#include "complex_calc_lib/complex.h"
 
 void printComplex(struct Complex c)
 {
@@ -83,6 +83,7 @@ int main()
          break;       
       }
       printComplexResult("Result:", c3);
+      scanf("%c", &white_space);
     }
   }
 
