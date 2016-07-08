@@ -1,6 +1,6 @@
 #include "complex.h"
 
-// Addition
+/* Addition */
 struct Complex add(struct Complex first, struct Complex second)
 {
   struct Complex result;
@@ -9,7 +9,7 @@ struct Complex add(struct Complex first, struct Complex second)
   return result;
 }
 
-// Subtraction
+/* Subtraction */
 struct Complex sub(struct Complex minuend, struct Complex subtrahend)
 {
   struct Complex result;
@@ -18,7 +18,7 @@ struct Complex sub(struct Complex minuend, struct Complex subtrahend)
   return result;
 }
 
-// Multiplication
+/* Multiplication */
 struct Complex mul(struct Complex first, struct Complex second)
 {
   struct Complex result;
@@ -27,7 +27,7 @@ struct Complex mul(struct Complex first, struct Complex second)
   return result;
 }
 
-// Division
+/* Division */
 struct Complex div(struct Complex dividend, struct Complex devider)
 {
   struct Complex result;

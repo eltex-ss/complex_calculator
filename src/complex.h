@@ -5,14 +5,16 @@ struct Complex {
   float im;
 };
 
-// Addition
+int a;
+
+/* Addition */
 struct Complex add(struct Complex first, struct Complex second);
 
-// Subtraction
+/* Subtraction */
 struct Complex sub(struct Complex minuend, struct Complex subtrahend);
 
-// Multiplication
+/* Multiplication */
 struct Complex mul(struct Complex first, struct Complex second);
 
-// Division
+/* Division */
 struct Complex div(struct Complex dividend, struct Complex devider);

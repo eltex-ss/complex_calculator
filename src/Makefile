@@ -2,23 +2,23 @@ objects = main.o complex.o
 
 TARGET = complexCalculator
 
-CFLAGS = -c
+CFLAGS = -g -Wall -pedantic -ansi
 
 all : $(objects)
 		$(CC) -o $(TARGET) $(objects)
 
-
-debug : CFLAGS += -g
-debug : executable
+release : CFLAGS -= -g
+release : executable
 
 executable : $(objects)
 		$(CC) -o $(TARGET) $(objects)
 
-main.o : main.c complex.h
-		$(CC) $(CFLAGS) main.c
+main.o : complex.h
+main.o : main.c
+		$(CC) -c $(CFLAGS) $<
 
 complex.o : complex.c
-		$(CC) $(CFLAGS) complex.c
+		$(CC) -c $(CFLAGS) $<
 
 .PHONY : clean
 clean : 
