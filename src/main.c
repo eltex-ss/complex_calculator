@@ -4,7 +4,17 @@
 
 void printComplex(struct Complex c)
 {
-  printf("%f + %fi", c.re, c.im);
+  if (c.re == 0 && c.im != 0) {
+    printf("%fi", c.im);
+  }
+  else if (c.re != 0 && c.im == 0) {
+    printf("%f", c.re);
+  }
+  else if (c.re == 0 && c.im == 0) {
+    printf("0");
+  } else {
+    printf("%f + %fi", c.re, c.im);
+  }
 }
 
 void printComplexResult(const char * message, struct Complex c)
@@ -14,27 +24,67 @@ void printComplexResult(const char * message, struct Complex c)
   printf("\n");
 }
 
+void PrintMenu(void)
+{
+  printf("Menu:\n");
+  printf("1) Add\n");
+  printf("2) Sub\n");
+  printf("3) Mul\n");
+  printf("4) Div\n");
+  printf("0) Exit\n");
+}
+
+void readComplex(struct Complex *c)
+{
+  scanf("%f %f", &c->re, &c->im);
+}
+
 int main()
 {
-  struct Complex c1, c2, c3;
-  c1.re = 2;
-  c1.im = 3;
+  while (1) {
+    struct Complex c1, c2, c3;
+    char choise;
+    char white_space;
+    PrintMenu();
+    choise = '\n';
+    while (choise == '\n') {
+      printf("$ ");
+      scanf("%c", &choise);
+    }
+    scanf("%c", &white_space);
 
-  c2.re = 4;
-  c2.im = 0.5;
+    choise -= '0';
 
-  c3 = add( c1, c2 );
-  printComplexResult("Addition: ", c3);
+    if (choise == 0)
+      break;
+    
+    if (1 > choise || choise > 4) {
+      printf("Incorrect input\n");
+    } else {
+      printf("Please, write real and imagine parts of the first number\n");
+      printf("$ ");
+      readComplex(&c1);
 
-  c3 = sub( c1, c2 );
-  printComplexResult("Substraction: ", c3);
-
-  c3 = mul( c1, c2 );
-  printComplexResult("Multiplication: ", c3);
-
-  c3 = div(c1, c2);
-  printComplexResult("Division: ", c3);
-  
+      printf("Please, write real and imagine parts of the second number\n");
+      printf("$ ");
+      readComplex(&c2);
+      switch (choise) {
+       case 1:
+         c3 = add(c1, c2);
+         break;
+       case 2:
+         c3 = sub(c1, c2);
+         break;
+       case 3:
+         c3 = mul(c1, c2);
+         break;
+       case 4:
+         c3 = div(c1, c2);
+         break;       
+      }
+      printComplexResult("Result:", c3);
+    }
+  }
 
 	return 0;
 }
