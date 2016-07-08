@@ -2,7 +2,7 @@
 
 #include "complex_calc_lib/complex.h"
 
-void printComplex(struct Complex c)
+void PrintComplex(struct Complex c)
 {
   if (c.re == 0 && c.im != 0) {
     printf("%fi", c.im);
@@ -17,10 +17,10 @@ void printComplex(struct Complex c)
   }
 }
 
-void printComplexResult(const char * message, struct Complex c)
+void PrintComplexResult(const char * message, struct Complex c)
 {
   printf("%s", message);
-  printComplex(c);
+  PrintComplex(c);
   printf("\n");
 }
 
@@ -34,7 +34,7 @@ void PrintMenu(void)
   printf("0) Exit\n");
 }
 
-void readComplex(struct Complex *c)
+void ReadComplex(struct Complex *c)
 {
   scanf("%f %f", &c->re, &c->im);
 }
@@ -63,11 +63,11 @@ int main()
     } else {
       printf("Please, write real and imagine parts of the first number\n");
       printf("$ ");
-      readComplex(&c1);
+      ReadComplex(&c1);
 
       printf("Please, write real and imagine parts of the second number\n");
       printf("$ ");
-      readComplex(&c2);
+      ReadComplex(&c2);
       switch (choise) {
        case 1:
          c3 = add(c1, c2);
@@ -82,7 +82,7 @@ int main()
          c3 = div(c1, c2);
          break;       
       }
-      printComplexResult("Result:", c3);
+      PrintComplexResult("Result:", c3);
       scanf("%c", &white_space);
     }
   }
