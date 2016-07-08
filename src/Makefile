@@ -1,25 +1,33 @@
-objects = main.o complex.o
+objects = main.o
 
 TARGET = complexCalculator
 
 CFLAGS = -g -Wall -pedantic -ansi
 
-all : $(objects)
-		$(CC) -o $(TARGET) $(objects)
+LDFLAGS = -L.
+LDLIBS = -lcomplex_calc
+
+LIB_NAME = libcomplex_calc.a
+LIB_TARGET = calc_lib
+
+LIB_OBJECTS = complex.o
+
+all : $(objects) $(LIB_TARGET)
+		$(CC) -o $(TARGET) $(objects) $(LDFLAGS) $(LDLIBS)
 
 release : CFLAGS -= -g
-release : executable
-
-executable : $(objects)
-		$(CC) -o $(TARGET) $(objects)
+release : all
 
 main.o : complex.h
 main.o : main.c
 		$(CC) -c $(CFLAGS) $<
+
+$(LIB_TARGET) : complex.o
+		ar rc $(LIB_NAME) $?
 
 complex.o : complex.c
 		$(CC) -c $(CFLAGS) $<
 
 .PHONY : clean
 clean : 
-		rm $(TARGET) $(objects)
+		rm $(TARGET) $(objects) $(LIB_OBJECTS) $(LIB_NAME) 
