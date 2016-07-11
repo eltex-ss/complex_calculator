@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <dlfcn.h>
 
 #include "complex_calc_lib/complex.h"
 
@@ -39,12 +40,45 @@ void ReadComplex(struct Complex *c)
   scanf("%f %f", &c->re, &c->im);
 }
 
+struct Complex handleOperation(char op, struct Complex c1, struct Complex c2)
+{
+  struct Complex result;
+  struct Complex (*operation)(struct Complex, struct Complex);
+  char library_prefix[] = "./complex_calc_lib/libcomplex_";
+  char library_operation[3];
+  char library_postfix[] = ".so";
+  char library_path[50];
+  void *ds;
+  
+  switch (op) {
+    case 1:
+      sprintf(library_operation, "add");
+      break;
+    case 2:
+      sprintf(library_operation, "sub");
+      break;
+    case 3:
+      sprintf(library_operation, "mul");
+      break;
+    case 4:
+      sprintf(library_operation, "div");
+      break;       
+  }
+  sprintf(library_path, "%s%s%s", library_prefix, library_operation,
+          library_postfix);
+  ds = dlopen(library_path, RTLD_NOW);
+  operation = (struct Complex*) dlsym(ds, library_operation);
+  result = operation(c1, c2);
+  dlclose(ds);
+  return result;
+}
+
 int main()
 {
+  struct Complex c1, c2, c3;
+  char choise;
+  char white_space;
   while (1) {
-    struct Complex c1, c2, c3;
-    char choise;
-    char white_space;
     PrintMenu();
     choise = '\n';
     while (choise == '\n') {
@@ -68,20 +102,7 @@ int main()
       printf("Please, write real and imagine parts of the second number\n");
       printf("$ ");
       ReadComplex(&c2);
-      switch (choise) {
-       case 1:
-         c3 = add(c1, c2);
-         break;
-       case 2:
-         c3 = sub(c1, c2);
-         break;
-       case 3:
-         c3 = mul(c1, c2);
-         break;
-       case 4:
-         c3 = div(c1, c2);
-         break;       
-      }
+      c3 = handleOperation(choise, c1, c2);
       PrintComplexResult("Result:", c3);
       scanf("%c", &white_space);
     }

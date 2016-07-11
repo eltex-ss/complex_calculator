@@ -5,8 +5,7 @@ TARGET = complex_calculator
 CFLAGS = -g -Wall -pedantic -ansi
 
 LDFLAGS = -L./complex_calc_lib
-LDLIBS = -lcomplex_add -lcomplex_sub \
-				 -lcomplex_mul -lcomlex_div
+LDLIBS = -ldl
 
 SUBDIR = complex_calc_lib
 
@@ -18,7 +17,6 @@ main.o : main.c complex_calc_lib/complex.h
 
 release : CFLAGS -= -g
 release : all
-
 
 .PHONY : clean subdirs $(SUBDIR)
 
