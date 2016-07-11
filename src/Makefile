@@ -7,8 +7,6 @@ CFLAGS = -g -Wall -pedantic -ansi
 LDFLAGS = -L./complex_calc_lib
 LDLIBS = -lcomplex_calc
 
-LIB_NAME = libcomplex_calc.a
-
 SUBDIR = complex_calc_lib
 
 all : $(SUBDIR) $(objects)
@@ -29,4 +27,4 @@ main.o : main.c complex_calc_lib/complex.h
 		$(CC) -c $(CFLAGS) $<
 
 clean : 
-		-rm $(TARGET) $(objects) ./$(SUBDIR)/*.o ./$(SUBDIR)/*.a
+		-rm $(TARGET) $(objects) ./$(SUBDIR)/*.o ./$(SUBDIR)/*.a ./$(SUBDIR)/*.so

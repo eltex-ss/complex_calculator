@@ -1,14 +1,16 @@
 objects = complex.o
 
-CFLAGS = -Wall -pedantic -ansi
+CFLAGS = -Wall -pedantic -ansi -fPIC
 
-LIB_NAME = libcomplex_calc.a
+LIB_NAME = libcomplex_calc.so
 LIB_TARGET = calc_lib
 
 LIB_OBJECTS = complex.o
 
+LDFLAGS = -shared
+
 all : $(LIB_OBJECTS)
-		ar rc $(LIB_NAME) $(LIB_OBJECTS)
+		$(CC) -o $(LIB_NAME) $(LDFLAGS) $(LIB_OBJECTS)
 
 debug : CFLAGS += -g
 debug : all
@@ -18,4 +20,4 @@ complex.o : complex.c complex.h
 
 .PHONY : clean
 clean : 
-		-rm $(LIB_OBJECTS) $(LIB_NAME) 
+	-rm $(LIB_OBJECTS) $(LIB_NAME)
