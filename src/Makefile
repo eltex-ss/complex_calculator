@@ -5,12 +5,16 @@ TARGET = complex_calculator
 CFLAGS = -g -Wall -pedantic -ansi
 
 LDFLAGS = -L./complex_calc_lib
-LDLIBS = -lcomplex_calc
+LDLIBS = -lcomplex_add -lcomplex_sub \
+				 -lcomplex_mul -lcomlex_div
 
 SUBDIR = complex_calc_lib
 
 all : $(SUBDIR) $(objects)
 		$(CC) -o $(TARGET) $(objects) $(LDFLAGS) $(LDLIBS)
+
+main.o : main.c complex_calc_lib/complex.h
+		$(CC) -c $(CFLAGS) $<
 
 release : CFLAGS -= -g
 release : all
@@ -22,9 +26,6 @@ subdirs : $(SUBDIR)
 
 $(SUBDIR) :
 		$(MAKE) -C $@
-
-main.o : main.c complex_calc_lib/complex.h
-		$(CC) -c $(CFLAGS) $<
 
 clean : 
 		-rm $(TARGET) $(objects) ./$(SUBDIR)/*.o ./$(SUBDIR)/*.a ./$(SUBDIR)/*.so
