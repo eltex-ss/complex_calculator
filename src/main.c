@@ -40,16 +40,13 @@ void LoadOperationPaths(void)
     if (file->d_name[0] == '.')
       continue;
 
-
     if (strstr(file->d_name, libcomplex) != NULL ) {
       strncpy(operation_name[operations_count],
              file->d_name + libcomplex_string_size, 3);
       strcpy(plugin_name[operations_count], file->d_name);
       ++operations_count;
-      
     }
   }
-
   closedir(dir);
 }
 
@@ -97,11 +94,12 @@ struct Complex HandleOperation(char op, struct Complex c1, struct Complex c2)
   char library_path[50];
   void *ds = NULL;
   int op_num = (int)op;
+  operation = NULL;
 
   sprintf(library_path, "%s%s", library_prefix, plugin_name[op_num]);
   ds = dlopen(library_path, RTLD_NOW);
   operation = (struct Complex (*)(struct Complex, struct Complex))
-              dlsym(ds, plugin_name[op_num]);
+              dlsym(ds, operation_name[op_num]);
   result = operation(c1, c2);
   dlclose(ds);
   return result;
@@ -113,7 +111,6 @@ int main(void)
   char choise;
   char white_space;
 
-
   LoadOperationPaths();
   while (1) {
     PrintMenu();
@@ -123,15 +120,13 @@ int main(void)
       scanf("%c", &choise);
     }
     scanf("%c", &white_space);
-
-    choise -= '0';
-
-    if (choise == 0)
+    if (choise == '0')
       break;
     
-    if (1 > choise || choise > 4) {
+    if ('1' > choise || choise > '4') {
       printf("Incorrect input\n");
     } else {
+      choise -= ('0' + 1);
       printf("Please, write real and imagine parts of the first number\n");
       printf("$ ");
       ReadComplex(&c1);

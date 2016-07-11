@@ -4,15 +4,15 @@ TARGET = complex_calculator
 
 CFLAGS = -g -Wall -pedantic -ansi -std=c99
 
-LDFLAGS = -L./complex_calc_lib
 LDLIBS = -ldl
 
 SUBDIR = complex_calc_lib
 
 all : $(SUBDIR) COPY $(objects)
-		$(CC) -o $(TARGET) $(objects) $(LDFLAGS) $(LDLIBS)
+		$(CC) -o $(TARGET) $(objects) $(LDLIBS)
 
-main.o : main.c complex_calc_lib/complex.h
+main.o : complex_calc_lib/complex.h
+main.o : main.c
 		$(CC) -c $(CFLAGS) $<
 
 release : CFLAGS -= -g

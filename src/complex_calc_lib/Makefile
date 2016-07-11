@@ -28,4 +28,4 @@ $(objects) : %.o : %.c
 
 .PHONY : clean
 clean : 
-	-rm $(objects) $(LIB_TARGETS)
+		-rm $(objects) *.so
