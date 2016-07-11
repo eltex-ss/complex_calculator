@@ -2,27 +2,55 @@
 #include <dlfcn.h>
 #include <string.h>
 
+#include <dirent.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "complex_calc_lib/complex.h"
 
-char operation_list[4][4];
+#define currentDirNameSize 150
+#define maxPluginCount 4
+
+char plugin_name[maxPluginCount][20];
+char operation_name[maxPluginCount][4];
 int operations_count = 0;
 
-void LoadOperations(void)
+void LoadOperationPaths(void)
 {
-  char library_name[4];
-  char white_space;
+  DIR * dir;
+  struct dirent * file;
+  char current_dir_name[currentDirNameSize];
+  char libcomplex[] = "libcomplex_";
+  int libcomplex_string_size;
+  libcomplex_string_size = strlen(libcomplex);
 
-  printf("Please, write operations u want:\n");
-  printf("q - quit\n");
-  while (1) {
-    printf("$ ");
-    scanf("%s", library_name);
-    scanf("%c", &white_space);
-    if (library_name[0] == 'q')
-      break;
-    strncpy(operation_list[operations_count], library_name, 4);
-    ++operations_count;
+  if (getcwd(current_dir_name, currentDirNameSize) == NULL) {
+    printf("Can't get current dir\n");
+    return;
   }
+
+  strcpy(current_dir_name + strlen(current_dir_name), "/plugins");
+  dir = opendir(current_dir_name);
+  if (!dir) {
+    printf("Can't open current dir\n");
+    return;
+  }
+
+  while ((file = readdir(dir)) != NULL) {
+    if (file->d_name[0] == '.')
+      continue;
+
+
+    if (strstr(file->d_name, libcomplex) != NULL ) {
+      strncpy(operation_name[operations_count],
+             file->d_name + libcomplex_string_size, 3);
+      strcpy(plugin_name[operations_count], file->d_name);
+      ++operations_count;
+      
+    }
+  }
+
+  closedir(dir);
 }
 
 void PrintComplex(struct Complex c)
@@ -51,7 +79,7 @@ void PrintMenu(void)
 {
   printf("Menu:\n");
   for (int i = 0; i < operations_count; ++i) {
-    printf("%d) %s\n", i + 1, operation_list[i]);
+    printf("%d) %s\n", i + 1, operation_name[i]);
   }
   printf("0) Exit\n");
 }
@@ -65,18 +93,15 @@ struct Complex HandleOperation(char op, struct Complex c1, struct Complex c2)
 {
   struct Complex result;
   struct Complex (*operation)(struct Complex, struct Complex);
-  char library_prefix[] = "./complex_calc_lib/libcomplex_";
-  char library_postfix[] = ".so";
+  char library_prefix[] = "./plugins/";
   char library_path[50];
   void *ds;
   int op_num = (int)op;
 
-  sprintf(library_path, "%s%s%s", library_prefix, operation_list[op_num],
-          library_postfix);
+  sprintf(library_path, "%s%s", library_prefix, plugin_name[op_num]);
   ds = dlopen(library_path, RTLD_NOW);
-  /*  TODO: why here is the warning? */
   operation = (struct Complex (*)(struct Complex, struct Complex))
-              dlsym(ds, operation_list[op_num]);
+              dlsym(ds, plugin_name[op_num]);
   result = operation(c1, c2);
   dlclose(ds);
   return result;
@@ -88,7 +113,8 @@ int main(void)
   char choise;
   char white_space;
 
-  LoadOperations();
+
+  LoadOperationPaths();
   while (1) {
     PrintMenu();
     choise = '\n';
