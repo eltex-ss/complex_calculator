@@ -95,7 +95,7 @@ struct Complex HandleOperation(char op, struct Complex c1, struct Complex c2)
   struct Complex (*operation)(struct Complex, struct Complex);
   char library_prefix[] = "./plugins/";
   char library_path[50];
-  void *ds;
+  void *ds = NULL;
   int op_num = (int)op;
 
   sprintf(library_path, "%s%s", library_prefix, plugin_name[op_num]);
