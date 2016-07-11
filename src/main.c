@@ -1,7 +1,29 @@
 #include <stdio.h>
 #include <dlfcn.h>
+#include <string.h>
 
 #include "complex_calc_lib/complex.h"
+
+char operation_list[4][4];
+int operations_count = 0;
+
+void LoadOperations(void)
+{
+  char library_name[4];
+  char white_space;
+
+  printf("Please, write operations u want:\n");
+  printf("q - quit\n");
+  while (1) {
+    printf("$ ");
+    scanf("%s", library_name);
+    scanf("%c", &white_space);
+    if (library_name[0] == 'q')
+      break;
+    strncpy(operation_list[operations_count], library_name, 4);
+    ++operations_count;
+  }
+}
 
 void PrintComplex(struct Complex c)
 {
@@ -28,10 +50,9 @@ void PrintComplexResult(const char * message, struct Complex c)
 void PrintMenu(void)
 {
   printf("Menu:\n");
-  printf("1) Add\n");
-  printf("2) Sub\n");
-  printf("3) Mul\n");
-  printf("4) Div\n");
+  for (int i = 0; i < operations_count; ++i) {
+    printf("%d) %s\n", i + 1, operation_list[i]);
+  }
   printf("0) Exit\n");
 }
 
@@ -40,44 +61,34 @@ void ReadComplex(struct Complex *c)
   scanf("%f %f", &c->re, &c->im);
 }
 
-struct Complex handleOperation(char op, struct Complex c1, struct Complex c2)
+struct Complex HandleOperation(char op, struct Complex c1, struct Complex c2)
 {
   struct Complex result;
   struct Complex (*operation)(struct Complex, struct Complex);
   char library_prefix[] = "./complex_calc_lib/libcomplex_";
-  char library_operation[3];
   char library_postfix[] = ".so";
   char library_path[50];
   void *ds;
-  
-  switch (op) {
-    case 1:
-      sprintf(library_operation, "add");
-      break;
-    case 2:
-      sprintf(library_operation, "sub");
-      break;
-    case 3:
-      sprintf(library_operation, "mul");
-      break;
-    case 4:
-      sprintf(library_operation, "div");
-      break;       
-  }
-  sprintf(library_path, "%s%s%s", library_prefix, library_operation,
+  int op_num = (int)op;
+
+  sprintf(library_path, "%s%s%s", library_prefix, operation_list[op_num],
           library_postfix);
   ds = dlopen(library_path, RTLD_NOW);
-  operation = (struct Complex*) dlsym(ds, library_operation);
+  /*  TODO: why here is the warning? */
+  operation = (struct Complex (*)(struct Complex, struct Complex))
+              dlsym(ds, operation_list[op_num]);
   result = operation(c1, c2);
   dlclose(ds);
   return result;
 }
 
-int main()
+int main(void)
 {
   struct Complex c1, c2, c3;
   char choise;
   char white_space;
+
+  LoadOperations();
   while (1) {
     PrintMenu();
     choise = '\n';
@@ -102,7 +113,7 @@ int main()
       printf("Please, write real and imagine parts of the second number\n");
       printf("$ ");
       ReadComplex(&c2);
-      c3 = handleOperation(choise, c1, c2);
+      c3 = HandleOperation(choise, c1, c2);
       PrintComplexResult("Result:", c3);
       scanf("%c", &white_space);
     }

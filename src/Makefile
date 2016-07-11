@@ -2,7 +2,7 @@ objects = main.o
 
 TARGET = complex_calculator
 
-CFLAGS = -g -Wall -pedantic -ansi
+CFLAGS = -g -Wall -pedantic -ansi -std=c99
 
 LDFLAGS = -L./complex_calc_lib
 LDLIBS = -ldl
@@ -26,4 +26,5 @@ $(SUBDIR) :
 		$(MAKE) -C $@
 
 clean : 
-		-rm $(TARGET) $(objects) ./$(SUBDIR)/*.o ./$(SUBDIR)/*.a ./$(SUBDIR)/*.so
+		-rm -rf $(TARGET) $(objects) ./complex_calc_lib/*.o \
+			./complex_calc_lib/*.so
