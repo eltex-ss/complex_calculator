@@ -30,4 +30,4 @@ COPY :
 
 clean : 
 		-rm -rf $(TARGET) $(objects) ./complex_calc_lib/*.o \
-			./complex_calc_lib/*.so
+			./complex_calc_lib/*.so ./plugins/*.so

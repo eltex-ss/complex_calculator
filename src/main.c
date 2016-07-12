@@ -32,7 +32,7 @@ void LoadOperationPaths(void)
   strcpy(current_dir_name + strlen(current_dir_name), "/plugins");
   dir = opendir(current_dir_name);
   if (!dir) {
-    printf("Can't open current dir\n");
+    printf("Can't open plugins dir\n");
     return;
   }
 
@@ -139,6 +139,5 @@ int main(void)
       scanf("%c", &white_space);
     }
   }
-
-	return 0;
+  return 0;
 }
