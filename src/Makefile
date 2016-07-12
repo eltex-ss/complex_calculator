@@ -26,8 +26,9 @@ $(SUBDIR) :
 		$(MAKE) -C $@
 
 COPY :
+		mkdir plugins
 		cp $(SUBDIR)/*.so ./plugins
 
 clean : 
 		-rm -rf $(TARGET) $(objects) ./complex_calc_lib/*.o \
-			./complex_calc_lib/*.so ./plugins/*.so
+			./complex_calc_lib/*.so ./plugins/*.so rmdir plugins
