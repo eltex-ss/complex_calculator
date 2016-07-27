@@ -26,7 +26,7 @@ $(SUBDIR) :
 		$(MAKE) -C $@
 
 COPY :
-		mkdir plugins
+		mkdir -p plugins
 		cp $(SUBDIR)/*.so ./plugins
 
 clean : 
